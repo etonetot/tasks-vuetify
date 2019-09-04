@@ -115,18 +115,3 @@ export default {
 </script>
 
 
-<style >
-.editTask
-{
-    /* height: 15px; */
-}
-
-.editTask, .editTask div {
-  height: 10px;
-  font-size: 12pt;
-}
-.editTask label[for] {
-  height: 20px;
-  font-size: 12pt;
-}
-</style>
