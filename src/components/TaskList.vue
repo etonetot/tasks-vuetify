@@ -15,7 +15,6 @@
                         @dragstart="onDragStart(task.id, $event)" 
                         @drop.stop.prevent="onDrop(task.id, $event)" @dragover.prevent
             >
-                <template v-if="!task.editing">   
                     <span class="text-no-wrap mr-1">{{i+1}}.</span>
                     <v-progress-linear :value="task.done" rounded color="blue-grey" height="25">
                         <template v-slot="{ value }">
@@ -23,23 +22,14 @@
                         </template>
                     </v-progress-linear>             
                     <v-btn fab small dark class="ml-2" @click="doTask(task.id)" color="green"><v-icon small>fas fa-play-circle</v-icon></v-btn>  
-                    <v-btn fab small dark class="ml-2" @click="startEditTask(task)" color="" :disabled="editMode"><v-icon small>fas fa-edit</v-icon></v-btn>  
                     <v-btn fab small dark class="ml-2" @click="delTask(task.id)" color="red"><v-icon small>fas fa-trash</v-icon></v-btn>  
-                </template>
-
-                <template v-if="task.editing">   
-                    <v-text-field v-model="task.name" validate-on-blur solo hide-details :rules="[rules.required]" 
-                       single-line  class="editTask"
-                        @keyup.enter="endEditTask(task)" label="" color="green"></v-text-field>
-                    <v-btn fab small dark class="ml-2" @click="endEditTask(task)" color=""><v-icon small>fas fa-check</v-icon></v-btn>  
-                </template>
                                      
             </v-card>
 
             <v-card class="d-flex flex-row pa-2 ma-2 align-top" outlined color="grey lighten-2"  flat :key="-1">
-                <v-text-field v-model="newTaskName" validate-on-blur :rules="[rules.required]" outlined 
+                <v-text-field v-model="newTaskName" validate-on-blur :rules="[newTaskRules]" outlined 
                         @keyup.enter="addTask" label="New task" color="green"></v-text-field>
-                <v-btn @click="addTask" fab small class="ma-2" :disabled="isAddDisabled()" ><v-icon small>fas fa-plus</v-icon></v-btn>  
+                <v-btn @click="addTask" fab small class="ma-2"><v-icon small>fas fa-plus</v-icon></v-btn>  
                 <v-btn @click="addStdTasks" fab small class="ma-2"><v-icon >fas fa-folder-plus</v-icon></v-btn>  
             </v-card>  
            </v-slide-y-transition>
@@ -62,10 +52,6 @@ export default {
   data() {
     return {
       newTaskName: '',
-      editMode: false,
-      rules: {
-          required: value => value.length>2 || 'Length must be 2 and more',
-      }
     }
   },
   
@@ -79,17 +65,21 @@ export default {
         let sumTotal = this.tasks.reduce( (sum, task)=>{ return sum+task.done }, 0);
         sumTotal /= this.tasks.length;
         return sumTotal.toFixed(0);
-    } 
+    }, 
      
-
   },
 
   methods:{
-    isAddDisabled() {
-      return this.rules.required(this.newTaskName) !== true
-    },  
+    newTaskRules(value) {
+        if (value.length<2) 
+          return 'Name must be longer than 1';
+        if (this.tasks.find( item => item.name==value) )
+          return `${value} already exists`
+        return true;
+    },
+
     addTask() {
-      if (this.rules.required(this.newTaskName) !== true)
+      if (this.newTaskRues(this.newTaskName) !== true)
         return;
       this.$store.commit('addTask', {name: this.newTaskName, type: this.listtype} )
       this.newTaskName = ''
@@ -105,7 +95,7 @@ export default {
     },
 
     onDragStart(id, event) {
-        event.dataTransfer.setData('text/plain', id);
+      event.dataTransfer.setData('text/plain', id);
         // event.target.style.opacity = .5;
     },
 
@@ -119,17 +109,6 @@ export default {
         this.$store.commit('moveTask', {idFrom, idTo} )
     },
 
-    endEditTask(task) {
-        task.editing = this.editMode = false;
-
-    },
-
-    startEditTask(task) {
-        if (this.editMode)
-            return;
-        task.editing = this.editMode = true;
-
-    } 
 
   }
 };

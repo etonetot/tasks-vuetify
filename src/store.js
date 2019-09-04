@@ -10,11 +10,16 @@ const savePlugin = store => {
   // вызывается после инициализации хранилища
 
   store.state.tasks = JSON.parse( localStorage.getItem('TASKS_VUETIFY') ) || [];
+  store.state.stdTasks = JSON.parse( localStorage.getItem('STDTASKS_VUETIFY') ) || defaultTasks;
 
   store.subscribe((mutation, state) => {
     // вызывается после каждой мутации
     // мутация передаётся в формате `{ type, payload }`.
-    localStorage.setItem('TASKS_VUETIFY', JSON.stringify ( state.tasks ));
+    if ( ['addTask','delTask', 'moveTask', 'doTask', 'addStdTasks' ].includes(mutation.type) )
+      localStorage.setItem('TASKS_VUETIFY', JSON.stringify ( state.tasks ));
+
+    if ( ['addStdTask','delStdTask', 'moveStdTask' ].includes(mutation.type) )
+      localStorage.setItem('STDTASKS_VUETIFY', JSON.stringify ( state.stdTasks ));
 
   });
 };
@@ -25,9 +30,11 @@ export default new Vuex.Store({
   plugins: [ savePlugin ],
   state: {
     tasks: [],
+    stdTasks: [],
   },
   getters: {
     gettasks: state => listtype => state.tasks.filter(item => item.type==listtype),
+    getStdTasks: state => state.stdTasks,
   },
   mutations: {
     addTask(state, {name, type}){
@@ -50,7 +57,7 @@ export default new Vuex.Store({
     },
 
     addStdTasks(state, {type}) {
-      defaultTasks.forEach(item => {
+      state.stdTasks.forEach(item => {
         if ( !state.tasks.find(task => task.type==type && task.name==item) )
           state.tasks.push( new Task(item, type) )
       })  
@@ -74,7 +81,29 @@ export default new Vuex.Store({
         state.tasks.push(taskFrom)
 
     },  
+
     
+
+
+    // STD TASKS
+    addStdTask(state, name){
+      state.stdTasks.push( name )
+    },
+
+    delStdTask(state, i) {
+        state.stdTasks.splice(i, 1);
+    },
+
+    moveStdTask(state, {iFrom, iTo}) {
+      const taskFrom = state.stdTasks.splice(iFrom, 1);  
+
+      if (iTo>=0)
+        state.stdTasks.splice(iTo, 0, ...taskFrom);  
+      else
+        state.stdTasks.push(...taskFrom)
+
+    },  
+
     
   },
   actions: {
