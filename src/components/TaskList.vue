@@ -9,7 +9,7 @@
                 </v-progress-linear>             
             </v-card>
 
-           <!-- <v-slide-y-transition group leave-absolute> -->
+           <v-slide-y-transition group leave-absolute>
             <v-card v-for="(task, i) in tasks" :key="task.id" outlined color="" flat height="60"
                         class="d-flex flex-row pa-2 ma-2 align-center" draggable
                         @dragstart="onDragStart(task.id, $event)" 
@@ -48,7 +48,7 @@
                 <v-btn @click="addTask" fab small class="ma-2"><v-icon small>fas fa-plus</v-icon></v-btn>  
                 <v-btn @click="addStdTasks" fab small class="ma-2"><v-icon >fas fa-folder-plus</v-icon></v-btn>  
             </v-card>  
-           <!-- </v-slide-y-transition> -->
+           </v-slide-y-transition>
 
     </div>
 </template>
