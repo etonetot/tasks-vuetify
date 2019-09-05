@@ -16,7 +16,7 @@
                         @drop.stop.prevent="onDrop(task.id, $event)" @dragover.prevent
             >
               <span class="text-no-wrap mr-1">{{i+1}}.</span>
-              <v-progress-linear :value="task.done" rounded color="blue-grey" height="25">
+              <v-progress-linear :value="task.done" rounded color="blue-grey" height="25" @click="doTask(task.id)">
                   <template v-slot="{ value }">
                   <strong>{{ task.name }} </strong>
                   </template>
