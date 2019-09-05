@@ -15,14 +15,17 @@
                         @dragstart="onDragStart(task.id, $event)" 
                         @drop.stop.prevent="onDrop(task.id, $event)" @dragover.prevent
             >
-                    <span class="text-no-wrap mr-1">{{i+1}}.</span>
-                    <v-progress-linear :value="task.done" rounded color="blue-grey" height="25">
-                        <template v-slot="{ value }">
-                        <strong>{{ task.name }} </strong>
-                        </template>
-                    </v-progress-linear>             
-                    <v-btn fab small dark class="ml-2" @click="doTask(task.id)" color="green"><v-icon small>fas fa-play-circle</v-icon></v-btn>  
-                    <v-btn fab small dark class="ml-2" @click="delTask(task.id)" color="red"><v-icon small>fas fa-trash</v-icon></v-btn>  
+              <span class="text-no-wrap mr-1">{{i+1}}.</span>
+              <v-progress-linear :value="task.done" rounded color="blue-grey" height="25">
+                  <template v-slot="{ value }">
+                  <strong>{{ task.name }} </strong>
+                  </template>
+              </v-progress-linear> 
+
+              <dial-menu-btn>
+                  <v-btn fab small dark class="ml-2" @click="doTask(task.id)" color="green"><v-icon x-small>fas fa-play-circle</v-icon></v-btn>  
+                  <v-btn fab small dark class="ml-2" @click="delTask(task.id)" color="red"><v-icon x-small>fas fa-trash</v-icon></v-btn>  
+              </dial-menu-btn>
                                      
             </v-card>
 
@@ -38,10 +41,11 @@
 </template>
 
 <script>
-import Task from '@/Task';
+import DialMenuBtn from '@/components/DialMenuBtn';
 
 export default {
   components: {
+    DialMenuBtn
   },
 
   props:{
@@ -109,9 +113,9 @@ export default {
         this.$store.commit('moveTask', {idFrom, idTo} )
     },
 
-
   }
 };
 </script>
 
-
+<style>
+</style>
