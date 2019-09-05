@@ -25,6 +25,7 @@
               <dial-menu-btn>
                   <v-btn fab small dark class="ml-2" @click="doTask(task.id)" color="green"><v-icon x-small>fas fa-play-circle</v-icon></v-btn>  
                   <v-btn fab small dark class="ml-2" @click="delTask(task.id)" color="red"><v-icon x-small>fas fa-trash</v-icon></v-btn>  
+                  <v-btn fab small dark class="ml-2" @click="startEditTask(task)" color="" :disabled="editMode"><v-icon small>fas fa-edit</v-icon></v-btn>  
               </dial-menu-btn>
                                      
             </v-card>
