@@ -1,5 +1,5 @@
 <template>
-    <v-speed-dial v-model="fab" right direction="right" :open-on-hover="true" transition="scale-transition" class="menuBtn">
+    <v-speed-dial v-model="fab" right direction="right" :open-on-click="false" :open-on-hover="true" transition="scale-transition" class="menuBtn">
 
         <template v-slot:activator>
             <v-btn v-model="fab" color="blue darken-2"  dark fab x-small class="ml-6 menuBtnActivator">
@@ -33,7 +33,7 @@ export default {
 <style>
 .menuBtn .v-speed-dial__list
 {
-  z-index: 100 !important;
+  z-index: 10 !important;
 }
 
 .menuBtn .v-speed-dial__list button
